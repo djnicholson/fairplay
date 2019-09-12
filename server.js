@@ -26,7 +26,7 @@ const Server = function(port) {
             });
             response.write(snakeJs);
             response.end();
-        } else if (request.url === '/new-game') {
+        } else if (request.url.startsWith('/new-game')) {
             let responseText = JSON.stringify(leaderBoard.getSeed());
             response.writeHead(200, {
                 'Content-Type': 'application/json',

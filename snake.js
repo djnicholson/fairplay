@@ -1,10 +1,115 @@
 const Snake = function(seedrandom, blockhash, startTime) {
 
+    this.Interval = 100;
+
+    const Directions = {
+        UP: 0,
+        DOWN: 1,
+        LEFT: 2,
+        RIGHT: 3,
+    };
+
     const seed = blockhash + '_' + startTime;
 
     const rng = new seedrandom(seed);
 
-    console.log('new Snake(' + blockhash + ', ' + startTime + ') // ' + rng());
+    const width = 20;
+    const height = 10;
+    const initialSnakeLength = 5;
+
+    const snake = [];
+    for (let i = 0; i < initialSnakeLength; i++) {
+        snake.push([
+            Math.round(width / 2) + i,
+            Math.round(height / 2)
+        ]);
+    }
+
+    let direction = Directions.RIGHT;
+
+    let food = [0, 0];
+
+    let alive = true;
+
+    const placeFood = function() {
+        let success = false;
+        while (!success) {
+            food[0] = Math.floor(rng() * width);
+            food[1] = Math.floor(rng() * height);
+            success = true;
+            for (let i = 0; i < snake.length; i++) {
+                if ((snake[i][0] === food[0]) && (snake[i][1] === food[1])) {
+                    success = false;
+                }
+            }
+        }
+    }
+
+    placeFood();
+
+    this.drawToConsole = function() {
+        for (let y = 0; y < height; y++) {
+            let line = '';
+            for (let x = 0; x < width; x++) {
+                let character = '-';
+                if ((food[0] === x) && (food[1] === y)) {
+                    character = 'o';
+                } else {
+                    for (let i = 0; i < snake.length; i++) {
+                        if ((snake[i][0] === x) && (snake[i][1] === y)) {
+                            if (i === snake.length - 1) {
+                                character = '8';
+                            } else {
+                                character = 'X';
+                            }
+                        }
+                    }
+                }
+
+                line += character;
+            }
+
+            console.log(line + '   ' + y);
+        }
+
+        console.log('Direction: ' + direction);
+    }
+
+    this.tick = function() {
+        if (alive) {
+            const oldHead = snake[snake.length - 1];
+            const newHead = [oldHead[0], oldHead[1]];
+            if (direction === Directions.UP) {
+                newHead[1] = (newHead[1] - 1) % height;
+            } else if (direction === Directions.DOWN) {
+                newHead[1] = (newHead[1] + 1) % height;
+            } else if (direction === Directions.LEFT) {
+                newHead[0] = (newHead[0] - 1) % width;
+            } else if (direction === Directions.RIGHT) {
+                newHead[0] = (newHead[0] + 1) % width;
+            }
+
+            let ateFood = false;
+            for (let i = 0; i < snake.length; i++) {
+                if ((snake[i][0] === newHead[0]) && (snake[i][1] === newHead[1])) {
+                    alive = false;
+                }
+
+                if ((snake[i][0] === food[0]) && (snake[i][1] === food[1])) {
+                    ateFood = true;
+                }
+            }
+
+            if (alive) {
+                snake.push(newHead);
+                if (ateFood) {
+                    placeFood();
+                } else {
+                    snake.shift();
+                }
+            }
+        }
+    }
 
 };
 

@@ -24,7 +24,12 @@
     <script src="/snake.js"></script>
     <script>
         var go = function() {
-            new Snake(Math.seedrandom, 100, 200);
+            let snake = new Snake(Math.seedrandom, 100, 200);
+            snake.drawToConsole();
+            setInterval(function() {
+                snake.tick();
+                snake.drawToConsole();
+            }, snake.Interval);
         }
     </script>
 </body>

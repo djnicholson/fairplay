@@ -10,6 +10,7 @@ const Server = function(port) {
     const snakeJs = fs.readFileSync('snake.js') + '';
 
     const snake = new Snake(seedrandom, 100, 200);
+    snake.drawToConsole();
 
     const httpServer = http.createServer(function(request, response) {
         console.log(new Date(), ' Received request for ' + request.url);

@@ -1,4 +1,6 @@
 serverSecret.txt
+connect.sh
+*.pem
 
 # Logs
 logs

@@ -75,7 +75,7 @@
                 }
             };
 
-            $.getJSON('/new-game', function(seedData) {
+            $.getJSON('/new-game?' + Math.random(), function(seedData) {
                 snake = new Snake(Math.seedrandom, seedData[0], seedData[1]);
 
                 if (interval === -1) {

@@ -2,7 +2,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
 
     this.Interval = 100;
 
-    const Directions = {
+    this.Directions = {
         UP: 0,
         DOWN: 1,
         LEFT: 2,
@@ -25,7 +25,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
         ]);
     }
 
-    let direction = Directions.RIGHT;
+    let direction = this.Directions.RIGHT;
 
     let food = [0, 0];
 
@@ -73,19 +73,20 @@ const Snake = function(seedrandom, blockhash, startTime) {
         }
 
         console.log('Direction: ' + direction);
+        console.log('Score: ' + snake.length);
     }
 
     this.tick = function() {
         if (alive) {
             const oldHead = snake[snake.length - 1];
             const newHead = [oldHead[0], oldHead[1]];
-            if (direction === Directions.UP) {
-                newHead[1] = (newHead[1] - 1) % height;
-            } else if (direction === Directions.DOWN) {
+            if (direction === this.Directions.UP) {
+                newHead[1] = (height + newHead[1] - 1) % height;
+            } else if (direction === this.Directions.DOWN) {
                 newHead[1] = (newHead[1] + 1) % height;
-            } else if (direction === Directions.LEFT) {
-                newHead[0] = (newHead[0] - 1) % width;
-            } else if (direction === Directions.RIGHT) {
+            } else if (direction === this.Directions.LEFT) {
+                newHead[0] = (width + newHead[0] - 1) % width;
+            } else if (direction === this.Directions.RIGHT) {
                 newHead[0] = (newHead[0] + 1) % width;
             }
 
@@ -108,6 +109,18 @@ const Snake = function(seedrandom, blockhash, startTime) {
                     snake.shift();
                 }
             }
+        }
+    }
+
+    this.setDirection = function(d) {
+        if ((d === this.Directions.UP) && (direction !== this.Directions.DOWN)) {
+            direction = this.Directions.UP;
+        } else if ((d === this.Directions.DOWN) && (direction !== this.Directions.UP)) {
+            direction = this.Directions.DOWN;
+        } else if ((d === this.Directions.LEFT) && (direction !== this.Directions.RIGHT)) {
+            direction = this.Directions.LEFT;
+        } else if ((d === this.Directions.RIGHT) && (direction !== this.Directions.LEFT)) {
+            direction = this.Directions.RIGHT;
         }
     }
 

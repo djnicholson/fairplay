@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/djnicholson/fairplay/issues"
   },
-  "homepage": "https://github.com/djnicholson/fairplay#readme"
+  "homepage": "https://github.com/djnicholson/fairplay#readme",
+  "dependencies": {
+    "forever-monitor": "^1.7.1"
+  }
 }

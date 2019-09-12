@@ -29,7 +29,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
 
     let food = [0, 0];
 
-    let alive = true;
+    this.alive = true;
 
     const placeFood = function() {
         let success = false;
@@ -76,8 +76,9 @@ const Snake = function(seedrandom, blockhash, startTime) {
         console.log('Score: ' + snake.length);
     }
 
+    let that = this;
     this.tick = function() {
-        if (alive) {
+        if (that.alive) {
             const oldHead = snake[snake.length - 1];
             const newHead = [oldHead[0], oldHead[1]];
             if (direction === this.Directions.UP) {
@@ -93,7 +94,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
             let ateFood = false;
             for (let i = 0; i < snake.length; i++) {
                 if ((snake[i][0] === newHead[0]) && (snake[i][1] === newHead[1])) {
-                    alive = false;
+                    that.alive = false;
                 }
 
                 if ((snake[i][0] === food[0]) && (snake[i][1] === food[1])) {
@@ -101,7 +102,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
                 }
             }
 
-            if (alive) {
+            if (that.alive) {
                 snake.push(newHead);
                 if (ateFood) {
                     placeFood();

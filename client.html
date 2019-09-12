@@ -26,23 +26,59 @@
         var go = function() {
             let snake = new Snake(Math.seedrandom, 100, 200);
 
+            let history = [];
+
+            let tickCount = 0;
+
             document.onkeydown = function(e) {
                 if (e.keyCode === 37) {
+                    history.push({
+                        t: tickCount,
+                        d: snake.Directions.LEFT
+                    });
                     snake.setDirection(snake.Directions.LEFT);
+                    tickCount = 0;
                 } else if (e.keyCode === 38) {
+                    history.push({
+                        t: tickCount,
+                        d: snake.Directions.UP
+                    });
                     snake.setDirection(snake.Directions.UP);
+                    tickCount = 0;
                 } else if (e.keyCode === 39) {
+                    history.push({
+                        t: tickCount,
+                        d: snake.Directions.RIGHT
+                    });
                     snake.setDirection(snake.Directions.RIGHT);
+                    tickCount = 0;
                 } else if (e.keyCode === 40) {
+                    history.push({
+                        t: tickCount,
+                        d: snake.Directions.DOWN
+                    });
                     snake.setDirection(snake.Directions.DOWN);
+                    tickCount = 0;
                 }
             };
 
             snake.drawToConsole();
 
-            setInterval(function() {
-                snake.tick();
-                snake.drawToConsole();
+            let interval = setInterval(function() {
+                if (snake.alive) {
+                    snake.tick();
+                    tickCount++;
+                    snake.drawToConsole();
+                } else {
+                    history.push({
+                        t: tickCount,
+                        d: null,
+                    });
+                    console.log('Game over!');
+                    clearInterval(interval);
+                }
+
+                console.log(JSON.stringify(history));
             }, snake.Interval);
         }
     </script>

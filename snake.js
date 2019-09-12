@@ -15,7 +15,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
 
     const width = 20;
     const height = 10;
-    const initialSnakeLength = 5;
+    const initialSnakeLength = 8;
 
     const snake = [];
     for (let i = 0; i < initialSnakeLength; i++) {
@@ -47,6 +47,10 @@ const Snake = function(seedrandom, blockhash, startTime) {
 
     placeFood();
 
+    this.getScore = function() {
+        return snake.length - initialSnakeLength;
+    };
+
     this.drawToConsole = function() {
         for (let y = 0; y < height; y++) {
             let line = '';
@@ -73,7 +77,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
         }
 
         console.log('Direction: ' + direction);
-        console.log('Score: ' + snake.length);
+        console.log('Score: ' + (snake.length - initialSnakeLength));
     }
 
     let that = this;

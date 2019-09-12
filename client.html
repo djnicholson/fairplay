@@ -23,7 +23,18 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.3/seedrandom.min.js"></script>
     <script src="/snake.js"></script>
     <script>
-        var go = function() {
+        const submitScore = function(seedData, history) {
+            $.post('/submit-score', JSON.stringify({
+                    blockHash: seedData[0],
+                    startTime: seedData[1],
+                    history: history
+                }),
+                function() {
+                    // TODO: Refresh scoareboard
+                });
+        };
+
+        const go = function() {
 
             let snake = null;
             let history = [];
@@ -82,6 +93,7 @@
                             console.log('Game over!');
                             clearInterval(interval);
                             interval = -1;
+                            submitScore(seedData, history);
                         }
 
                         console.log(JSON.stringify(history));

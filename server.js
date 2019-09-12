@@ -3,7 +3,6 @@ const http = require('http');
 
 const LeaderBoard = require('./leaderboard');
 
-
 const Server = function(port) {
 
     const clientHtml = fs.readFileSync('client.html') + '';
@@ -35,6 +34,23 @@ const Server = function(port) {
             });
             response.write(responseText);
             response.end();
+        } else if ((request.url === '/submit-score') && (request.method === 'POST')) {
+            let body = ''
+            request.on('data', function(data) { body += data });
+            request.on('end', function() {
+                try {
+                    leaderBoard.submitScore(JSON.parse(body));
+                } catch (e) {
+                    console.error(e);
+                }
+                responseText = '{}';
+                response.writeHead(200, {
+                    'Content-Type': 'application/json',
+                    'Content-Length': responseText.length,
+                });
+                response.write(responseText);
+                response.end();
+            });
         } else {
             response.writeHead(404);
             response.end();

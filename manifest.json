@@ -1,0 +1,5 @@
+{
+    "name": "Secure Snake",
+    "start_url": "https://snake.cryptodough.io/",
+    "description": "A version of the Snake game that attempts to prevent leaderboard cheating"
+}

@@ -35,7 +35,7 @@
         Please sign in with Blockstack to play Snake...
     </div>
 
-    <h1>Hello, world (local)!</h1>
+    <h1>Hello, world!</h1>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -63,12 +63,16 @@
             blockstackSession = new blockstack.UserSession();
             if (blockstackSession.isUserSignedIn()) {
                 onSignIn();
+            } else if (blockstackSession.isSignInPending()) {
+                blockstackSession.handlePendingSignIn().then(go);
             } else {
                 blockstackSession.redirectToSignIn();
             }
         };
 
         const onSignIn = function() {
+
+            $('.signIn').hide();
 
             let snake = null;
             let history = [];

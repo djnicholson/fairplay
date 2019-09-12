@@ -13,29 +13,31 @@ const Server = function(port, httpsPort) {
     const leaderBoard = new LeaderBoard();
 
     const requestHandler = function(request, response) {
-        console.log(new Date(), ' Received request for ' + request.url);
-        if (request.url === '/') {
+        url = request.url.split('?')[0];
+        console.log(new Date(), ' Received request for ' + url);
+        if (url === '/') {
             response.writeHead(200, {
                 'Content-Type': 'text/html',
                 'Content-Length': clientHtml.length,
             });
             response.write(clientHtml);
             response.end();
-        } else if (request.url === '/snake.js') {
+        } else if (url === '/snake.js') {
             response.writeHead(200, {
                 'Content-Type': 'application/javascript',
                 'Content-Length': snakeJs.length,
             });
             response.write(snakeJs);
             response.end();
-        } else if (request.url === '/manifest.json') {
+        } else if (url === '/manifest.json') {
             response.writeHead(200, {
                 'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
                 'Content-Length': manifestJson.length,
             });
             response.write(manifestJson);
             response.end();
-        } else if (request.url.startsWith('/new-game')) {
+        } else if (url === '/new-game') {
             let responseText = JSON.stringify(leaderBoard.getSeed());
             response.writeHead(200, {
                 'Content-Type': 'application/json',
@@ -43,7 +45,7 @@ const Server = function(port, httpsPort) {
             });
             response.write(responseText);
             response.end();
-        } else if ((request.url === '/submit-score') && (request.method === 'POST')) {
+        } else if ((url === '/submit-score') && (request.method === 'POST')) {
             let body = ''
             request.on('data', function(data) { body += data });
             request.on('end', function() {

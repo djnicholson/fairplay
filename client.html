@@ -17,69 +17,83 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.3/seedrandom.min.js"></script>
     <script src="/snake.js"></script>
     <script>
         var go = function() {
-            let snake = new Snake(Math.seedrandom, 100, 200);
 
+            let snake = null;
             let history = [];
-
             let tickCount = 0;
+            let interval = -1;
 
             document.onkeydown = function(e) {
-                if (e.keyCode === 37) {
-                    history.push({
-                        t: tickCount,
-                        d: snake.Directions.LEFT
-                    });
-                    snake.setDirection(snake.Directions.LEFT);
-                    tickCount = 0;
-                } else if (e.keyCode === 38) {
-                    history.push({
-                        t: tickCount,
-                        d: snake.Directions.UP
-                    });
-                    snake.setDirection(snake.Directions.UP);
-                    tickCount = 0;
-                } else if (e.keyCode === 39) {
-                    history.push({
-                        t: tickCount,
-                        d: snake.Directions.RIGHT
-                    });
-                    snake.setDirection(snake.Directions.RIGHT);
-                    tickCount = 0;
-                } else if (e.keyCode === 40) {
-                    history.push({
-                        t: tickCount,
-                        d: snake.Directions.DOWN
-                    });
-                    snake.setDirection(snake.Directions.DOWN);
-                    tickCount = 0;
+                if (snake) {
+                    if (e.keyCode === 37) {
+                        history.push({
+                            t: tickCount,
+                            d: snake.Directions.LEFT
+                        });
+                        snake.setDirection(snake.Directions.LEFT);
+                        tickCount = 0;
+                    } else if (e.keyCode === 38) {
+                        history.push({
+                            t: tickCount,
+                            d: snake.Directions.UP
+                        });
+                        snake.setDirection(snake.Directions.UP);
+                        tickCount = 0;
+                    } else if (e.keyCode === 39) {
+                        history.push({
+                            t: tickCount,
+                            d: snake.Directions.RIGHT
+                        });
+                        snake.setDirection(snake.Directions.RIGHT);
+                        tickCount = 0;
+                    } else if (e.keyCode === 40) {
+                        history.push({
+                            t: tickCount,
+                            d: snake.Directions.DOWN
+                        });
+                        snake.setDirection(snake.Directions.DOWN);
+                        tickCount = 0;
+                    }
                 }
             };
 
-            snake.drawToConsole();
+            $.getJSON('/new-game', function(seedData) {
+                snake = new Snake(Math.seedrandom, seedData[0], seedData[1]);
 
-            let interval = setInterval(function() {
-                if (snake.alive) {
-                    snake.tick();
-                    tickCount++;
-                    snake.drawToConsole();
-                } else {
-                    history.push({
-                        t: tickCount,
-                        d: null,
-                    });
-                    console.log('Game over!');
-                    clearInterval(interval);
+                if (interval === -1) {
+                    interval = setInterval(function() {
+
+                        if (snake.alive) {
+                            snake.tick();
+                            tickCount++;
+                            snake.drawToConsole();
+                        } else {
+                            history.push({
+                                t: tickCount,
+                                d: null,
+                            });
+                            console.log('Game over!');
+                            clearInterval(interval);
+                            interval = -1;
+                        }
+
+                        console.log(JSON.stringify(history));
+
+                    }, snake.Interval);
                 }
 
-                console.log(JSON.stringify(history));
-            }, snake.Interval);
+                history = [];
+                tickCount = 0;
+                snake.drawToConsole();
+            });
+
         }
     </script>
 </body>

@@ -1,16 +1,15 @@
 const fs = require('fs');
 const http = require('http');
-const seedrandom = require('seedrandom');
 
-const Snake = require('./snake');
+const LeaderBoard = require('./leaderboard');
+
 
 const Server = function(port) {
 
     const clientHtml = fs.readFileSync('client.html') + '';
     const snakeJs = fs.readFileSync('snake.js') + '';
 
-    const snake = new Snake(seedrandom, 100, 200);
-    snake.drawToConsole();
+    const leaderBoard = new LeaderBoard();
 
     const httpServer = http.createServer(function(request, response) {
         console.log(new Date(), ' Received request for ' + request.url);
@@ -27,6 +26,14 @@ const Server = function(port) {
                 'Content-Length': snakeJs.length,
             });
             response.write(snakeJs);
+            response.end();
+        } else if (request.url === '/new-game') {
+            let responseText = JSON.stringify(leaderBoard.getSeed());
+            response.writeHead(200, {
+                'Content-Type': 'application/json',
+                'Content-Length': responseText.length,
+            });
+            response.write(responseText);
             response.end();
         } else {
             response.writeHead(404);

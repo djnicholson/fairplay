@@ -11,7 +11,7 @@ const Snake = function(seedrandom, blockhash, startTime) {
 
     const seed = blockhash + '_' + startTime;
 
-    const rng = new seedrandom(seed);
+    const rng = seedrandom(seed);
 
     const width = 20;
     const height = 10;

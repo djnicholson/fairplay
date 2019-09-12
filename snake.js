@@ -1,8 +1,10 @@
-const Snake = function(blockhash, startTime) {
+const Snake = function(seedrandom, blockhash, startTime) {
 
     const seed = blockhash + '_' + startTime;
 
-    alert('new Snake(' + blockhash + ', ' + startTime + ')');
+    const rng = new seedrandom(seed);
+
+    console.log('new Snake(' + blockhash + ', ' + startTime + ') // ' + rng());
 
 };
 
